@@ -3,14 +3,16 @@ from splinter import Browser
 from bs4 import BeautifulSoup as soup
 import pandas as pd
 import datetime as dt
+import random
+import time
 
 def scrape_all():
     # Initiate headless driver for deployment
     executable_path = {'executable_path': r'C:\Users\bellc\Downloads\chromedriver.exe'}
     browser = Browser('chrome', **executable_path, headless=True)
-    # browser = Browser("chrome", executable_path="chromedriver", headless=True)
 
     news_title, news_paragraph = mars_news(browser)
+    hemisphere_image_urls = mars_hemispheres(browser)
 
     # Run all scraping functions and store results in a dictionary
     data = {
@@ -18,7 +20,8 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
-        "last_modified": dt.datetime.now()
+        "last_modified": dt.datetime.now(),
+        "hemispheres": hemisphere_image_urls
     }
 
     # Stop webdriver and return data
@@ -33,7 +36,7 @@ def mars_news(browser):
     browser.visit(url)
 
     # Optional delay for loading the page
-    browser.is_element_present_by_css("ul.item_list li.slide", wait_time=1)
+    browser.is_element_present_by_css('div.list_text', wait_time=2)
 
     # Convert the browser html to a soup object and then quit the browser
     html = browser.html
@@ -83,6 +86,7 @@ def featured_image(browser):
 # ## Mars Facts
 
 def mars_facts():
+
     # Add try/except for error handling
     try:
         # Use 'read_html' to scrape the facts table into a dataframe
@@ -97,6 +101,53 @@ def mars_facts():
 
     # Convert dataframe into HTML format, add bootstrap
     return df.to_html(classes="table table-striped")
+
+def mars_hemispheres(browser):
+    # Visit URL 
+    url = 'https://data-class-mars-hemispheres.s3.amazonaws.com/Mars_Hemispheres/index.html'
+    browser.visit(url)
+    
+    # Parse HTML with soup
+    html_hemispheres = browser.html
+    hemisphere_soup = soup(html_hemispheres, 'html.parser')
+
+    # Scrape items that contain mars hemisphere info
+    hemispheres = hemisphere_soup.find_all('div', class_='item')
+
+    # Create a list to hold hemisphere images and titles.
+    hemisphere_image_urls = []
+
+    # Store main URL
+    hemispheres_url = 'https://data-class-mars-hemispheres.s3.amazonaws.com/Mars_Hemispheres/'
+
+    # Loop through list of all hemisphere info to retrieve image urls and titles
+    for x in hemispheres:
+        # Add wait time to avoid time out or website access restrictions
+        rand_num = random.randint(3,8)
+        time.sleep(rand_num)
+
+        # Store title
+        title = x.find('h3').text
+    
+        # Store link that takes you to full image jpg
+        ending_img_url = x.find('a', class_='itemLink product-item')['href']
+    
+        # Visit website link for full image
+        browser.visit(hemispheres_url + ending_img_url)
+    
+        # Parse HTML with soup
+        img_html = browser.html
+        img_soup = soup(img_html, 'html.parser')
+    
+        # Create full image URL
+        img_url = hemispheres_url + img_soup.find('img', class_='wide-image')['src']
+    
+        # Append retrieved info to a list of dictionaries
+        hemisphere_image_urls.append({'img_url' : img_url, 'title' : title})
+
+    # Stop webdriver and return data
+    browser.quit()
+    return hemisphere_image_urls
 
 if __name__ == "__main__":
 
