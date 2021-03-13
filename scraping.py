@@ -9,7 +9,7 @@ import time
 def scrape_all():
     # Initiate headless driver for deployment
     executable_path = {'executable_path': r'C:\Users\bellc\Downloads\chromedriver.exe'}
-    browser = Browser('chrome', **executable_path, headless=True)
+    browser = Browser('chrome', **executable_path, headless=False)
 
     news_title, news_paragraph = mars_news(browser)
     hemisphere_image_urls = mars_hemispheres(browser)
@@ -145,8 +145,6 @@ def mars_hemispheres(browser):
         # Append retrieved info to a list of dictionaries
         hemisphere_image_urls.append({'img_url' : img_url, 'title' : title})
 
-    # Stop webdriver and return data
-    browser.quit()
     return hemisphere_image_urls
 
 if __name__ == "__main__":
