@@ -1,0 +1,12 @@
+.jumbotron-background {
+	background-image: url("https://images.firstpost.com/wp-content/uploads/2019/04/Mars-atmosphere-1.jpg");
+	background-repeat: no-repeat;
+}
+
+.text-white {
+	color:#ffffff
+}
+
+body {
+	background-color:slategray;
+}
