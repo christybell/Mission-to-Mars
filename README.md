@@ -29,14 +29,14 @@ Next, I ran the `app.py` file with the modified `index.html` file and clicked th
 
 ### Deliverable 3: Add Bootstrap 3 Components
 1. I updated the `index.html` file to make the website mobile-responsive.
-2. I added a CSS stylesheet and added html to improve the website design:
-  - I added a backround image for the top header
-  - I made the scrape button color red
-  - I changed the background color to slate gray
-  - I made the background color of the Mars Facts table light gray
-  - I changed the text color to white for many elements
+2. I added a CSS stylesheet and added html to improve the website design as follows:
+    - I added a backround image for the top header.
+    - I made the scrape button color red
+    - I changed the background color to slate gray
+    - I made the background color of the Mars Facts table light gray
+    - I changed the text color to white for many elements so they would pop against the dark background color
 
-<img src="images/del 3_web app.PNG">
+<img src="images/Del 3_web app.PNG">
 
 ## Challenge Summary
 I think Robin's web app is looking polished now; it should get NASA's attention!
